@@ -100,6 +100,11 @@
                     Usuários
                 </a>
 
+                <a href="/vendas" class="menu-link">
+                    <i class="bi bi-person-fill"></i>
+                    Vendas
+                </a>
+
                  <!-- Botão Sair -->
                  <div class="mt-auto">
 

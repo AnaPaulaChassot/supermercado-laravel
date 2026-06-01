@@ -57,6 +57,11 @@
                 @if(session()->has('usuario_id'))
                 <div>
 
+                    <a href="/carrinho"
+                        class="btn btn-light">
+                        Meu carrinho
+                    </a>
+
                     <a href="/clientes/edit/{{ $cliente->id }}"
                         class="btn btn-light">
                         Perfil
@@ -141,107 +146,107 @@
 
         {{-- produtos --}}
 
-<div class="row">
-        @foreach($produtos as $produto)
+        <div class="row">
+            @foreach($produtos as $produto)
 
-        <div class="col-md-4 mb-4">
+            <div class="col-md-4 mb-4">
 
-            <div class="card card-produto h-100 shadow-sm">
+                <div class="card card-produto h-100 shadow-sm">
 
-                @if($produto->url)
+                    @if($produto->url)
 
-                <img
-                    src="{{ asset($produto->url) }}"
-                    class="card-img-top produto-img"
-                    alt="{{ $produto->nome }}">
+                    <img
+                        src="{{ asset($produto->url) }}"
+                        class="card-img-top produto-img"
+                        alt="{{ $produto->nome }}">
 
-                @else
+                    @else
 
-                <img
-                    src="https://via.placeholder.com/400x250"
-                    class="card-img-top produto-img">
+                    <img
+                        src="https://via.placeholder.com/400x250"
+                        class="card-img-top produto-img">
 
-                @endif
+                    @endif
 
-                <div class="card-body">
+                    <div class="card-body">
 
-                    <h5 class="card-title">
-                        {{ $produto->nome }}
-                    </h5>
+                        <h5 class="card-title">
+                            {{ $produto->nome }}
+                        </h5>
 
-                    <p class="card-text">
+                        <p class="card-text">
 
-                        {{ $produto->descricao }}
+                            {{ $produto->descricao }}
 
-                    </p>
+                        </p>
 
-                    <p>
+                        <p>
 
-                        <strong>
-                            R$ {{ number_format($produto->valor,2,',','.') }}
-                        </strong>
+                            <strong>
+                                R$ {{ number_format($produto->valor,2,',','.') }}
+                            </strong>
 
-                    </p>
+                        </p>
 
-                    <p>
+                        <p>
 
-                        Estoque:
-                        {{ $produto->quantidade_estoque }}
+                            Estoque:
+                            {{ $produto->quantidade_estoque }}
 
-                    </p>
-
-
-
-
-                    <form method="POST" action="{{ route('vendas.salvar') }}">
-                        @csrf
-
-                        <input type="hidden" name="produto_id" value="{{ $produto->id }}">
-
-                        <div class="mb-3">
-                            <label class="form-label">Quantidade</label>
-
-                            <input type="number"
-                                name="quantidade"
-                                class="form-control"
-                                min="1"
-                                max="{{ $produto->quantidade_estoque }}"
-                                value="1"
-                                required>
-                        </div>
-                        <div class="card-footer bg-white">
-                            @if(session()->has('usuario_id'))
-
-
-                            <button type="submit" class="btn btn-primary w-100">
-                                Adicionar ao carrinho
-                            </button>
-
-
-                            @else
-
-                            <a
-                                href="/login"
-                                class="btn btn-primary w-100">
-
-                                Entre para comprar
-
-                            </a>
+                        </p>
 
 
 
-                            @endif
-                        </div>
 
-                    </form>
+                        <form method="POST" action="{{ route('carrinho.adicionar') }}">
+                            @csrf
+
+                            <input type="hidden" name="produto_id" value="{{ $produto->id }}">
+
+                            <div class="mb-3">
+                                <label class="form-label">Quantidade</label>
+
+                                <input type="number"
+                                    name="quantidade"
+                                    class="form-control"
+                                    min="1"
+                                    max="{{ $produto->quantidade_estoque }}"
+                                    value="1"
+                                    required>
+                            </div>
+                            <div class="card-footer bg-white">
+                                @if(session()->has('usuario_id'))
+
+
+                                <button type="submit" class="btn btn-primary w-100">
+                                    Adicionar ao carrinho
+                                </button>
+
+
+                                @else
+
+                                <a
+                                    href="/login"
+                                    class="btn btn-primary w-100">
+
+                                    Entre para comprar
+
+                                </a>
+
+
+
+                                @endif
+                            </div>
+
+                        </form>
+                    </div>
+
+
                 </div>
-
 
             </div>
 
-        </div>
-
-        @endforeach
+            @endforeach
         </div>
 
     </div>

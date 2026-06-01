@@ -9,6 +9,8 @@ use App\Models\Produto;
 use App\Models\VendaProduto;
 use Illuminate\Http\Request;
 use App\Http\Requests\VendasRequest;
+use Illuminate\Support\Facades\DB;
+use App\Models\Carrinho;
 
 class VendaController extends Controller
 {
@@ -32,68 +34,105 @@ class VendaController extends Controller
     }
 
     function novo($id)
-        {
-    $produto = Produto::findOrFail($id);
+    {
+        $produto = Produto::findOrFail($id);
 
-    $clientes = Cliente::all();
-    $enderecos = Endereco::all();
+        $clientes = Cliente::all();
+        $enderecos = Endereco::all();
 
-    return view('vendas_novo', compact(
-        'produto',
-        'clientes',
-        'enderecos'
-    ));
-    }
-    
-
-   function salvar(Request $req)
-{
-    $req->validate([
-        'produto_id' => 'required|exists:produtos,id',
-        'quantidade' => 'required|integer|min:1'
-    ]);
-
-    $produto = Produto::findOrFail($req->produto_id);
-
-    if ($req->quantidade > $produto->quantidade_estoque) {
-        return back()->with('erro', 'Estoque insuficiente.');
+        return view('vendas_novo', compact(
+            'produto',
+            'clientes',
+            'enderecos'
+        ));
     }
 
-    // 👇 pega cliente correto
-    $cliente = Cliente::where('usuario_id', session('usuario_id'))->first();
 
-    if (!$cliente) {
-        return back()->with('erro', 'Cliente não encontrado.');
+    function salvar(Request $req)
+    {
+        DB::beginTransaction();
+
+        try {
+
+            $cliente = Cliente::where(
+                'usuario_id',
+                session('usuario_id')
+            )->firstOrFail();
+
+            $itens = Carrinho::with('produto')
+                ->where('cliente_id', $cliente->id)
+                ->get();
+
+            if ($itens->isEmpty()) {
+
+                return back()->withErrors([
+                    'O carrinho está vazio.'
+                ]);
+            }
+
+            $valorTotal = 0;
+
+            foreach ($itens as $item) {
+
+                $valorTotal +=
+                    $item->produto->valor *
+                    $item->quantidade;
+            }
+
+            // cria a venda
+            $venda = Venda::create([
+                'cliente_id'  => $cliente->id,
+                'endereco_id' => $req->enderecos_id,
+                'valor_total' => $valorTotal
+            ]);
+
+            // salva os produtos da venda
+            foreach ($itens as $item) {
+
+                $subtotal =
+                    $item->produto->valor *
+                    $item->quantidade;
+
+                VendaProduto::create([
+                    'venda_id'   => $venda->id,
+                    'produto_id' => $item->produto_id,
+                    'quantidade' => $item->quantidade,
+                    'subtotal'   => $subtotal
+                ]);
+
+                // baixa estoque
+                $produto = Produto::findOrFail(
+                    $item->produto_id
+                );
+
+                $produto->quantidade_estoque -=
+                    $item->quantidade;
+
+                $produto->save();
+            }
+
+            // limpa carrinho
+            Carrinho::where(
+                'cliente_id',
+                $cliente->id
+            )->delete();
+
+            DB::commit();
+
+            return redirect('/mercado')
+                ->with(
+                    'mensagem',
+                    'Compra realizada com sucesso!'
+                );
+        } catch (\Exception $e) {
+
+            DB::rollBack();
+
+            return back()->withErrors([
+                $e->getMessage()
+            ]);
+        }
     }
-
-    // cria venda
-    $venda = new Venda();
-    $venda->cliente_id = $cliente->id;
-    $endereco = Endereco::where('cliente_id', $cliente->id)->first();
-
-    if (!$endereco) {
-        return back()->with('erro', 'Cliente não possui endereço cadastrado.');
-    }
-
-    $venda->endereco_id = $endereco->id;
-    $venda->valor_total = $produto->valor * $req->quantidade;
-    $venda->save();
-
-    // pivot venda-produto
-    VendaProduto::create([
-        'venda_id' => $venda->id,
-        'produto_id' => $produto->id,
-        'quantidade' => $req->quantidade,
-        'subtotal' => $produto->valor * $req->quantidade
-    ]);
-
-    // baixa estoque
-    $produto->quantidade_estoque -= $req->quantidade;
-    $produto->save();
-
-    return redirect('/vendas')
-        ->with('mensagem', 'Venda realizada com sucesso!');
-}
 
     function edit($id)
     {

@@ -10,6 +10,7 @@ use App\Http\Controllers\EnderecoController;
 use App\Http\Controllers\VendaController;
 use App\Http\Controllers\UsuarioController;
 use App\Http\Controllers\LoginController;
+use App\Http\Controllers\CarrinhoController;
 
 /*Route::get('/', function () {
     return view('cliente');
@@ -29,12 +30,14 @@ Route::middleware('login')->group(function () {
     Route::get('/enderecos/edit/{id}', [EnderecoController::class, 'edit'])->name('enderecos.edit');
     Route::get('/enderecos/delete/{id}', [EnderecoController::class, 'delete'])->name('enderecos.delete');
     Route::get('/enderecos/show/{id}', [EnderecoController::class, 'show']);
-    Route::get('/vendas', [VendaController::class, 'listar'])->name('vendas.listar');
     Route::get('/vendas/novo/{id}', [VendaController::class, 'novo'])->name('vendas.novo');
     Route::post('/vendas/salvar', [VendaController::class, 'salvar'])->name('vendas.salvar');
     Route::get('/vendas/edit/{id}', [VendaController::class, 'edit'])->name('vendas.edit');
     Route::get('/vendas/delete/{id}', [VendaController::class, 'delete'])->name('vendas.delete');
     Route::get('/vendas/show/{id}', [VendaController::class, 'show'])->name('vendas.show');
+    Route::post('/carrinho/adicionar', [CarrinhoController::class, 'adicionar'])->name('carrinho.adicionar');
+    Route::get('/carrinho', [CarrinhoController::class, 'listar'])->name('carrinho');
+    Route::get('/carrinho/delete/{id}', [CarrinhoController::class, 'delete'])->name('carrinho.delete');
 });
 
 
@@ -53,6 +56,7 @@ Route::get('/mercado', [ClienteController::class, 'cliente'])
 
 
 Route::middleware('login.admin')->group(function () {
+    Route::get('/vendas', [VendaController::class, 'listar'])->name('vendas.listar');
     //categorias
     Route::get('/categorias', [CategoriaController::class, 'listar'])->name('cat.listar');
     Route::get('/categorias/novo', [CategoriaController::class, 'novo'])->name('cat.novo');

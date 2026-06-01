@@ -22,8 +22,8 @@ class EnderecosRequest extends FormRequest
             'cidade_id' =>
                 'required|exists:cidades,id',
 
-            'cliente_id' =>
-                'required|exists:clientes,id'
+            //'cliente_id' =>
+              //  'required|exists:clientes,id'
         ];
     }
 

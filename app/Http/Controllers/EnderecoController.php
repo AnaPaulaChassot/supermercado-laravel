@@ -47,11 +47,12 @@ class EnderecoController extends Controller
 
     function novo()
     {
+
         $cidades = Cidade::all();
         $clientes = Cliente::all();
 
         return view(
-            'enderecos_novo',
+            'endereco_novo',
             [
                 'cidades' => $cidades,
                 'clientes' => $clientes
@@ -61,12 +62,16 @@ class EnderecoController extends Controller
 
     function salvar(EnderecosRequest $req, $id = null)
     {
+        $cliente = Cliente::where(
+            'usuario_id',
+            session('usuario_id')
+        )->first();
+
         if ($id) {
 
             $e = Endereco::findOrFail($id);
 
             $operacao = "alterado";
-
         } else {
 
             $e = new Endereco();
@@ -79,7 +84,7 @@ class EnderecoController extends Controller
         $e->numero = $req->numero;
         $e->bairro = $req->bairro;
         $e->cidade_id = $req->cidade_id;
-        $e->cliente_id = $req->cliente_id;
+        $e->cliente_id = $cliente->id;
 
         $e->save();
 
@@ -88,7 +93,7 @@ class EnderecoController extends Controller
             "O endereço foi {$operacao} com sucesso."
         );
 
-        return redirect('/enderecos');
+        return redirect('/carrinho');
     }
 
     function edit($id)

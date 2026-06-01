@@ -27,96 +27,157 @@
         .card {
             border: none;
             border-radius: 12px;
-            box-shadow: 0 4px 15px rgba(0,0,0,.1);
+            box-shadow: 0 4px 15px rgba(0, 0, 0, .1);
         }
     </style>
 </head>
 
 <body>
 
-<!-- TOPO -->
-<div class="topo">
-    <div class="container d-flex justify-content-between align-items-center">
+    <!-- TOPO -->
+    <div class="topo">
+        <div class="container d-flex justify-content-between align-items-center">
 
-        <div class="logo">
-            🛒 CaçadorDeOfertas
+            <div class="logo">
+                🛒 CaçadorDeOfertas
+            </div>
+
+            <a href="/mercado" class="btn btn-light">
+                ← Continuar comprando
+            </a>
+
         </div>
-
-        <a href="/mercado" class="btn btn-light">
-            ← Voltar
-        </a>
-
     </div>
-</div>
 
-<div class="container">
+    @php
+    $total = 0;
+    @endphp
 
-    <div class="card">
+    <div class="container">
 
-        <div class="card-body">
+        <div class="card">
 
-            <h3 class="mb-4">
-                Meu carrinho de compras
-            </h3>
+            <div class="card-body">
 
-            <table class="table table-striped table-hover">
+                <h3 class="mb-4">
+                    Meu carrinho de compras
+                </h3>
 
-                <thead class="table-primary">
-                    <tr>
-                        <th>ID</th>
-                        <th>Cliente</th>
-                        <th>Endereço</th>
-                        <th>Total</th>
-                        <th>Data</th>
-                        <th>Ações</th>
-                    </tr>
-                </thead>
+                <table class="table table-striped table-hover">
 
-                <tbody>
+                    <thead class="table-primary">
+                        <tr>
+                            <th>ID</th>
+                            <th>Produto</th>
+                            <th>Quantidade</th>
+                            <th>Preço un</th>
+                            <th>Subtotal</th>
+                            <th>Ações</th>
+                        </tr>
+                    </thead>
 
-                    @forelse($vendas as $venda)
+                    <tbody>
+
+                        @forelse($itens as $item)
 
                         <tr>
-                            <td>{{ $venda->id }}</td>
-                            <td>{{ $venda->cliente->nome ?? '-' }}</td>
-                            <td>{{ $venda->endereco->descricao ?? '-' }}</td>
+                            <td>{{ $item->id }}</td>
+                            <td>{{ $item->produto->nome ?? '-' }}</td>
+                            <td>{{ $item->quantidade }}</td>
+                            <td>{{ $item->produto->valor ?? '-' }}</td>
                             <td>
-                                R$ {{ number_format($venda->valor_total, 2, ',', '.') }}
-                            </td>
-                            <td>
-                                {{ $venda->created_at }}
+                                R$ {{ number_format($item->produto->valor * $item->quantidade, 2, ',', '.') }}
                             </td>
 
                             <td>
-                                <a href="{{ route('vendas.show', $venda->id) }}" class="btn btn-info btn-sm">
-                                    Ver
-                                </a>
-
-                                <a href="{{ route('vendas.delete', $venda->id) }}" class="btn btn-danger btn-sm">
+                                <a href="{{ route('carrinho.delete', $item->id) }}" class="btn btn-danger btn-sm">
                                     Excluir
                                 </a>
                             </td>
                         </tr>
 
-                    @empty
+                        @empty
 
                         <tr>
                             <td colspan="6" class="text-center">
-                                Nenhuma venda encontrada.
+                                Carrinho vazio.
                             </td>
                         </tr>
 
-                    @endforelse
+                        @endforelse
 
-                </tbody>
+                    </tbody>
 
-            </table>
+                </table>
+
+            </div>
 
         </div>
 
+
+        @foreach($itens as $item)
+        @php
+        $total += $item->produto->valor * $item->quantidade;
+        @endphp
+        @endforeach
+
+        <div class="text-end">
+            <h4>
+                Total: R$ {{ number_format($total, 2, ',', '.') }}
+            </h4>
+        </div>
+
+
+        @if($errors->any())
+        <div class="alert alert-danger">
+            @foreach($errors->all() as $mensagem)
+            ⚠️ {{ $mensagem }} <br>
+            @endforeach
+        </div>
+        @endif
+
+        <form method="POST" action="{{ route('vendas.salvar') }}">
+            @csrf
+
+            <div class="form-floating mb-3">
+
+
+                <div class="mb-3">
+
+                    <label class="form-label">
+                        Selecione um endereço para entrega:
+                    </label>
+
+                    <select name="enderecos_id" class="form-select" required>
+                        <option value="">Selecione um endereço</option>
+
+                        @foreach($enderecos as $e)
+
+                        <option
+                            value="{{ $e->id }}"
+                            {{ old('enderecos_id') == $e->id ? 'selected' : '' }}>
+                            {{ $e->descricao }}
+                        </option>
+
+                        @endforeach
+
+                    </select>
+                    <div class="mt-2">
+                        <a href="/enderecos/novo"
+                            class="btn btn-warning">
+                            Cadastrar novo endereço
+                        </a>
+                    </div>
+                </div>
+
+                <input
+                    type="submit"
+                    value="Finalizar compra"
+                    class="btn btn-success">
+
+        </form>
     </div>
 
-</div>
-
 </body>
+
 </html>

@@ -1,53 +1,8 @@
-<!DOCTYPE html>
-<html lang="pt-br">
+@extends('mainadmin')
 
-<head>
-    <meta charset="UTF-8">
-    <title>Vendas - CaçadorDeOfertas</title>
+@section('titulo', 'Lista de Vendas')
 
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
-
-    <style>
-        body {
-            background: #f4f8ff;
-        }
-
-        .topo {
-            background: linear-gradient(90deg, #0d6efd, #0a58ca);
-            color: white;
-            padding: 20px;
-            margin-bottom: 30px;
-        }
-
-        .logo {
-            font-size: 30px;
-            font-weight: bold;
-        }
-
-        .card {
-            border: none;
-            border-radius: 12px;
-            box-shadow: 0 4px 15px rgba(0,0,0,.1);
-        }
-    </style>
-</head>
-
-<body>
-
-<!-- TOPO -->
-<div class="topo">
-    <div class="container d-flex justify-content-between align-items-center">
-
-        <div class="logo">
-            🛒 CaçadorDeOfertas
-        </div>
-
-        <a href="/mercado" class="btn btn-light">
-            ← Voltar
-        </a>
-
-    </div>
-</div>
+@section('conteudo')
 
 <div class="container">
 
@@ -94,9 +49,9 @@
                             </td>
 
                             <td>
-                                <a href="{{ route('vendas.show', $venda->id) }}" class="btn btn-info btn-sm">
+                                <!-- <a href="{{ route('vendas.show', $venda->id) }}" class="btn btn-info btn-sm">
                                     Ver
-                                </a>
+                                </a> -->
 
                                 <a href="{{ route('vendas.delete', $venda->id) }}" class="btn btn-danger btn-sm">
                                     Excluir
@@ -123,6 +78,4 @@
     </div>
 
 </div>
-
-</body>
-</html>
+@endsection
