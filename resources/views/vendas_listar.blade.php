@@ -3,7 +3,7 @@
 
 <head>
     <meta charset="UTF-8">
-    <title>Vendas - SuperCaçador</title>
+    <title>Vendas - CaçadorDeOfertas</title>
 
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
 
@@ -39,10 +39,10 @@
     <div class="container d-flex justify-content-between align-items-center">
 
         <div class="logo">
-            🛒 SuperCaçador
+            🛒 CaçadorDeOfertas
         </div>
 
-        <a href="/cliente" class="btn btn-light">
+        <a href="/mercado" class="btn btn-light">
             ← Voltar
         </a>
 

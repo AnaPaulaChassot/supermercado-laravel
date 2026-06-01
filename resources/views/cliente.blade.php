@@ -54,6 +54,7 @@
                     🛒 Caçador<span>DeOfertas</span>
                 </div>
 
+                @if(session()->has('usuario_id'))
                 <div>
 
                     <a href="/clientes/edit/{{ $cliente->id }}"
@@ -69,6 +70,21 @@
                     </form>
 
                 </div>
+                @else
+                <div>
+
+                    <a href="/login"
+                        class="btn btn-light">
+                        Entre
+                    </a>
+
+                    <a href="/clientes/novo"
+                        class="btn btn-outline-light">
+                        Cadastre-se
+                    </a>
+
+                </div>
+                @endif
 
             </div>
 
@@ -162,6 +178,8 @@
                     </div>
 
                     <div class="card-footer bg-white">
+                        @if(session()->has('usuario_id'))
+
 
                         <a
                             href="/vendas/novo/{{ $produto->id }}"
@@ -170,6 +188,22 @@
                             Comprar
 
                         </a>
+
+
+                        @else
+
+                        <a
+                            href="/login"
+                            class="btn btn-primary w-100">
+
+                            Entre para comprar
+
+                        </a>
+
+
+
+                        @endif
+
 
                     </div>
 

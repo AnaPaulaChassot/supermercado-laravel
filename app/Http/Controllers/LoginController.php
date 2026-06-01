@@ -52,9 +52,12 @@ class LoginController extends Controller
         return redirect('/mercado');
     }
 
-    public function logout()
+
+    public function logout(Request $request)
     {
-        session()->flush();
+        $request->session()->invalidate();
+        $request->session()->regenerateToken();
+
 
         return redirect('/login');
     }
