@@ -34,6 +34,7 @@ Route::middleware('login')->group(function () {
     Route::post('/vendas/salvar', [VendaController::class, 'salvar'])->name('vendas.salvar');
     Route::get('/vendas/edit/{id}', [VendaController::class, 'edit'])->name('vendas.edit');
     Route::get('/vendas/delete/{id}', [VendaController::class, 'delete'])->name('vendas.delete');
+    Route::get('/vendas/show/{id}', [VendaController::class, 'show'])->name('vendas.show');
 });
 
 
@@ -46,6 +47,9 @@ Route::post('/logout', [LoginController::class, 'logout'])->name('logout');
 
 Route::get('/mercado', [LoginController::class, 'cliente'])
     ->name('cliente');
+
+Route::get('/mercado', [ClienteController::class, 'cliente'])
+    ->name('mercado');
 
 
 Route::middleware('login.admin')->group(function () {

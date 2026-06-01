@@ -48,7 +48,7 @@
         >
 
             <option value="">
-                Categoria Principal
+                Sem categoria pai
             </option>
 
             @foreach($categorias as $categoria)

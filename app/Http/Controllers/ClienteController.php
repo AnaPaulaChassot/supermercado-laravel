@@ -10,9 +10,37 @@ use App\Models\Endereco;
 use App\Http\Requests\ClientesRequest;
 use App\Models\Usuario;
 use Illuminate\Support\Facades\Hash;
+use App\Models\Produto;
 
 class ClienteController extends Controller
 {
+
+    public function cliente(Request $req)
+    {
+        $produtos = Produto::query();
+
+        if ($req->filled('pesquisa')) {
+
+            $produtos->where(
+                'nome',
+                'LIKE',
+                '%' . $req->pesquisa . '%'
+            );
+        }
+
+        $produtos = $produtos->get();
+
+        $cliente = Cliente::where(
+            'usuario_id',
+            session('usuario_id')
+        )->first();
+
+        return view('cliente', [
+            'produtos' => $produtos,
+            'cliente' => $cliente
+        ]);
+    }
+
     function listar(Request $req)
     {
         $clientes = Cliente::query();
@@ -104,7 +132,7 @@ class ClienteController extends Controller
 
                 // EDITAR CLIENTE
                 $cliente = Cliente::findOrFail($id);
-                
+
                 $dadosCliente = [
                     'nome' => $req->nome,
                     'cpf' => $req->cpf,

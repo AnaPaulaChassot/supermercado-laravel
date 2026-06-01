@@ -75,25 +75,25 @@ class CategoriaController extends Controller
     {
         if ($id) {
 
-            $c = Categoria::findOrFail($id);
+            $cat = Categoria::findOrFail($id);
 
             $operacao = "alterada";
 
         } else {
 
-            $c = new Categoria();
+            $cat = new Categoria();
 
             $operacao = "inserida";
         }
 
-        $c->nome = $req->nome;
-        $c->categoria_pai = $req->categoria_pai;
+        $cat->nome = $req->nome;
+        $cat->categoria_pai = $req->categoria_pai;
 
-        $c->save();
+        $cat->save();
 
         session()->flash(
             "mensagem",
-            "A categoria {$c->nome} foi {$operacao} com sucesso."
+            "A categoria {$cat->nome} foi {$operacao} com sucesso."
         );
 
         return redirect('/categorias');
@@ -101,7 +101,7 @@ class CategoriaController extends Controller
 
     function edit($id)
     {
-        $c = Categoria::findOrFail($id);
+        $cat = Categoria::findOrFail($id);
 
         $categorias = Categoria::where(
             'id',
@@ -112,7 +112,7 @@ class CategoriaController extends Controller
         return view(
             'categorias_edit',
             [
-                'c' => $c,
+                'c' => $cat,
                 'categorias' => $categorias
             ]
         );

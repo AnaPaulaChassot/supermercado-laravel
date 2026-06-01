@@ -83,9 +83,14 @@
 
             <td>{{ $c->nome }}</td>
 
-            <td>
-                {{ $c->categoriaPai->nome ?? 'Categoria Principal' }}
-            </td>
+            
+
+                <td>                    
+                    {{ $c->pai?->nome ?? 'Sem categoria pai' }}
+                </td>
+
+                
+         
 
             <td>{{ $c->created_at }}</td>
 

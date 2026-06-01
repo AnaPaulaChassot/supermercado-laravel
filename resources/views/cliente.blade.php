@@ -99,7 +99,7 @@
 
             <div class="card-body">
 
-                <form method="GET">
+                <form method="GET" action="{{ route('mercado') }}">
 
                     <div class="input-group">
 
@@ -123,99 +123,130 @@
 
         </div>
 
-        <!-- Produtos -->
+        {{-- sucesso --}}
+        @if(session('mensagem'))
+        <div class="alert alert-success alert-dismissible fade show">
+            {{ session('mensagem') }}
+            <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+        </div>
+        @endif
 
-        <div class="row">
+        {{-- erro --}}
+        @if(session('erro'))
+        <div class="alert alert-danger alert-dismissible fade show">
+            {{ session('erro') }}
+            <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+        </div>
+        @endif
 
-            @foreach($produtos as $produto)
+        {{-- produtos --}}
 
-            <div class="col-md-4 mb-4">
+<div class="row">
+        @foreach($produtos as $produto)
 
-                <div class="card card-produto h-100 shadow-sm">
+        <div class="col-md-4 mb-4">
 
-                    @if($produto->url)
+            <div class="card card-produto h-100 shadow-sm">
 
-                    <img
-                        src="{{ asset($produto->url) }}"
-                        class="card-img-top produto-img"
-                        alt="{{ $produto->nome }}">
+                @if($produto->url)
 
-                    @else
+                <img
+                    src="{{ asset($produto->url) }}"
+                    class="card-img-top produto-img"
+                    alt="{{ $produto->nome }}">
 
-                    <img
-                        src="https://via.placeholder.com/400x250"
-                        class="card-img-top produto-img">
+                @else
 
-                    @endif
+                <img
+                    src="https://via.placeholder.com/400x250"
+                    class="card-img-top produto-img">
 
-                    <div class="card-body">
+                @endif
 
-                        <h5 class="card-title">
-                            {{ $produto->nome }}
-                        </h5>
+                <div class="card-body">
 
-                        <p class="card-text">
+                    <h5 class="card-title">
+                        {{ $produto->nome }}
+                    </h5>
 
-                            {{ $produto->descricao }}
+                    <p class="card-text">
 
-                        </p>
+                        {{ $produto->descricao }}
 
-                        <p>
+                    </p>
 
-                            <strong>
-                                R$ {{ number_format($produto->valor,2,',','.') }}
-                            </strong>
+                    <p>
 
-                        </p>
+                        <strong>
+                            R$ {{ number_format($produto->valor,2,',','.') }}
+                        </strong>
 
-                        <p>
+                    </p>
 
-                            Estoque:
-                            {{ $produto->quantidade_estoque }}
+                    <p>
 
-                        </p>
+                        Estoque:
+                        {{ $produto->quantidade_estoque }}
 
-                    </div>
-
-                    <div class="card-footer bg-white">
-                        @if(session()->has('usuario_id'))
-
-
-                        <a
-                            href="/vendas/novo/{{ $produto->id }}"
-                            class="btn btn-primary w-100">
-
-                            Comprar
-
-                        </a>
-
-
-                        @else
-
-                        <a
-                            href="/login"
-                            class="btn btn-primary w-100">
-
-                            Entre para comprar
-
-                        </a>
+                    </p>
 
 
 
-                        @endif
+
+                    <form method="POST" action="{{ route('vendas.salvar') }}">
+                        @csrf
+
+                        <input type="hidden" name="produto_id" value="{{ $produto->id }}">
+
+                        <div class="mb-3">
+                            <label class="form-label">Quantidade</label>
+
+                            <input type="number"
+                                name="quantidade"
+                                class="form-control"
+                                min="1"
+                                max="{{ $produto->quantidade_estoque }}"
+                                value="1"
+                                required>
+                        </div>
+                        <div class="card-footer bg-white">
+                            @if(session()->has('usuario_id'))
 
 
-                    </div>
+                            <button type="submit" class="btn btn-primary w-100">
+                                Adicionar ao carrinho
+                            </button>
 
+
+                            @else
+
+                            <a
+                                href="/login"
+                                class="btn btn-primary w-100">
+
+                                Entre para comprar
+
+                            </a>
+
+
+
+                            @endif
+                        </div>
+
+                    </form>
                 </div>
+
 
             </div>
 
-            @endforeach
+        </div>
 
+        @endforeach
         </div>
 
     </div>
+
+
 
 </body>
 
