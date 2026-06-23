@@ -1,38 +1,9 @@
-<!DOCTYPE html>
-<html lang="pt-br">
 
-<head>
-    <meta charset="UTF-8">
-    <title>Meu carrinho - CaçadorDeOfertas</title>
+    @extends('maincliente')
 
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+    @section('titulo', 'Administrador')
 
-    <style>
-        body {
-            background: #f4f8ff;
-        }
-
-        .topo {
-            background: linear-gradient(90deg, #0d6efd, #0a58ca);
-            color: white;
-            padding: 20px;
-            margin-bottom: 30px;
-        }
-
-        .logo {
-            font-size: 30px;
-            font-weight: bold;
-        }
-
-        .card {
-            border: none;
-            border-radius: 12px;
-            box-shadow: 0 4px 15px rgba(0, 0, 0, .1);
-        }
-    </style>
-</head>
-
-<body>
+    @section('conteudo')
 
     <!-- TOPO -->
     <div class="topo">
@@ -178,6 +149,4 @@
         </form>
     </div>
 
-</body>
-
-</html>
+@endsection

@@ -62,7 +62,8 @@ class CarrinhoController extends Controller
 
         return view('carrinho', [
             'itens' => $itens,
-            'enderecos' => $enderecos
+            'enderecos' => $enderecos,
+            'cliente' => $cliente
         ]);
     }
 

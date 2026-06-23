@@ -94,3 +94,4 @@ Route::middleware('login.admin')->group(function () {
     Route::get('/usuarios/delete/{id}', [UsuarioController::class, 'delete'])->name('usu.delete');
     Route::view('/administrador', 'administrador')->name('administrador');
 });
+  
