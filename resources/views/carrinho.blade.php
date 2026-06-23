@@ -4,6 +4,7 @@
     @section('titulo', 'Administrador')
 
     @section('conteudo')
+    
 
     <!-- TOPO -->
     <div class="topo">

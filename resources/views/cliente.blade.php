@@ -1,47 +1,11 @@
-<!DOCTYPE html>
-<html lang="pt-br">
 
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>CaçadorDeOfertas</title>
+    @extends('maincliente')
 
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+    @section('titulo', 'Administrador')
 
-    <style>
-        body {
-            background-color: #f4f8ff;
-        }
+    @section('conteudo')
+    
 
-        .topo {
-            background: linear-gradient(90deg, #0d6efd, #0a58ca);
-            color: white;
-            padding: 20px;
-        }
-
-        .logo {
-            font-size: 32px;
-            font-weight: bold;
-        }
-
-        .card-produto {
-            transition: 0.3s;
-        }
-
-        .card-produto:hover {
-            transform: translateY(-5px);
-            box-shadow: 0 4px 15px rgba(0, 0, 0, .15);
-        }
-
-        .produto-img {
-            height: 220px;
-            object-fit: cover;
-        }
-    </style>
-
-</head>
-
-<body>
 
     <!-- Cabeçalho -->
     <div class="topo">
@@ -251,8 +215,4 @@
 
     </div>
 
-
-
-</body>
-
-</html>
+@endsection

@@ -1,6 +1,16 @@
 <!DOCTYPE html>
 <html lang="pt-br">
 <head>
+    <!-- Google tag (gtag.js) -->
+    <script async src="https://www.googletagmanager.com/gtag/js?id=G-ZFE59BGX6Q"></script>
+    <script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag(){dataLayer.push(arguments);}
+    gtag('js', new Date());
+
+    gtag('config', 'G-ZFE59BGX6Q');
+    </script>
+
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Supermercado - @yield('titulo')</title>
@@ -79,6 +89,11 @@
             </div>
 
             <nav>
+
+                <a href="/dashboard" class="menu-link">
+                    <i class="bi bi-box-seam"></i>
+                    Dashboard
+                </a>
 
                 <a href="/produtos" class="menu-link">
                     <i class="bi bi-box-seam"></i>

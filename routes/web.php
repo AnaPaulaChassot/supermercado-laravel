@@ -11,6 +11,8 @@ use App\Http\Controllers\VendaController;
 use App\Http\Controllers\UsuarioController;
 use App\Http\Controllers\LoginController;
 use App\Http\Controllers\CarrinhoController;
+use SebastianBergmann\CodeCoverage\Report\Html\Dashboard;
+use App\Http\Controllers\DashboardController;
 
 /*Route::get('/', function () {
     return view('cliente');
@@ -93,5 +95,7 @@ Route::middleware('login.admin')->group(function () {
     Route::get('/usuarios/edit/{id}', [UsuarioController::class, 'edit'])->name('usu.edit');
     Route::get('/usuarios/delete/{id}', [UsuarioController::class, 'delete'])->name('usu.delete');
     Route::view('/administrador', 'administrador')->name('administrador');
+
+    Route::get('/dashboard', [DashboardController::class, 'index'])->name('dashboard');
 });
   

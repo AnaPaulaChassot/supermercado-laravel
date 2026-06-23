@@ -6,7 +6,6 @@
     @section('conteudo')
     
 
-
     <div class="topo">
         <div class="container d-flex justify-content-between align-items-center">
 
