@@ -42,7 +42,7 @@
 
     </div>
 
-    <!-- GRÁFICOS -->
+    <!-- gráficos -->
     <div class="row">
 
         <div class="col-md-6">
@@ -60,6 +60,49 @@
         </div>
 
     </div>
+
+    <!-- script dos gráficos -->
+    <script>
+        const vendasLabels = @json($vendasPorMes->pluck('mes')->map(function($mes, $i) use ($vendasPorMes) {
+            return $mes . '/' . $vendasPorMes[$i]->ano;
+        }));
+
+        const vendasData = @json($vendasPorMes->pluck('total_vendas'));
+
+        new Chart(document.getElementById('vendasChart'), {
+            type: 'bar',
+            data: {
+                labels: vendasLabels,
+                datasets: [{
+                    label: 'Vendas',
+                    data: vendasData,
+                    backgroundColor: '#0d6efd'
+                }]
+            }
+        });
+
+        const clientesLabels = @json($clientesPorMes->pluck('mes')->map(function($mes, $i) use ($clientesPorMes) {
+            return $mes . '/' . $clientesPorMes[$i]->ano;
+        }));
+
+        const clientesData = @json($clientesPorMes->pluck('total_clientes'));
+
+        new Chart(document.getElementById('clientesChart'), {
+            type: 'line',
+            data: {
+                labels: clientesLabels,
+                datasets: [{
+                    label: 'Clientes',
+                    data: clientesData,
+                    borderColor: '#198754',
+                    backgroundColor: 'rgba(25, 135, 84, 0.2)',
+                    fill: true,
+                    tension: 0.3
+                }]
+            }
+        });
+        
+    </script>
 
     <!-- TABELA CLIENTES -->
     <div class="card content-card mt-4 p-3">
