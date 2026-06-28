@@ -4,6 +4,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Api\PagamentoController;
 use App\Http\Controllers\Api\EntregaController;
+use App\Http\Controllers\Api\VendaController;
 
 /*
 |--------------------------------------------------------------------------
@@ -30,3 +31,9 @@ Route::post(
 '/entrega/status',
 [EntregaController::class,'status']
 );
+
+
+
+
+Route::get('/vendas', [VendaController::class, 'index']);
+Route::get('/vendas/{id}', [VendaController::class, 'show']);

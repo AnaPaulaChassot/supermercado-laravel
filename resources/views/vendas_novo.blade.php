@@ -1,44 +1,8 @@
-<!DOCTYPE html>
-<html lang="pt-br">
+ @extends('maincliente')
 
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Venda - CaçadorDeOfertas</title>
+ @section('titulo', 'Administrador')
 
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
-
-    <style>
-        body {
-            background-color: #f4f8ff;
-        }
-
-        .topo {
-            background: linear-gradient(90deg, #0d6efd, #0a58ca);
-            color: white;
-            padding: 20px;
-            margin-bottom: 30px;
-        }
-
-        .logo {
-            font-size: 30px;
-            font-weight: bold;
-        }
-
-        .card {
-            border: none;
-            border-radius: 15px;
-            box-shadow: 0 4px 15px rgba(0,0,0,.1);
-        }
-
-        .produto-img {
-            max-height: 300px;
-            object-fit: cover;
-        }
-    </style>
-</head>
-
-<body>
+ @section('conteudo')
 
 <!-- TOPO -->
 <div class="topo">
@@ -142,5 +106,5 @@
 
 </div>
 
-</body>
-</html>
+
+@endsection

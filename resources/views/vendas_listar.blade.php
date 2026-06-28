@@ -28,6 +28,8 @@
                         <th>Cliente</th>
                         <th>Endereço</th>
                         <th>Total</th>
+                        <th>Status Pagamento</th>
+                        <th>Status Entrega</th>
                         <th>Data</th>
                         <th>Ações</th>
                     </tr>
@@ -43,6 +45,13 @@
                             <td>{{ $venda->endereco->descricao ?? '-' }}</td>
                             <td>
                                 R$ {{ number_format($venda->valor_total, 2, ',', '.') }}
+                            </td>
+                            <td>
+                                {{ $venda->status_pagamento ?? 'Pendente' }}
+                            </td>
+
+                            <td>
+                                {{ $venda->status_entrega ?? 'Aguardando' }}
                             </td>
                             <td>
                                 {{ $venda->created_at }}
@@ -62,7 +71,7 @@
                     @empty
 
                         <tr>
-                            <td colspan="6" class="text-center">
+                            <td colspan="8" class="text-center">
                                 Nenhuma venda encontrada.
                             </td>
                         </tr>
