@@ -27,11 +27,7 @@ class CompraController extends Controller
             ]);
         }
 
-        /*
-        |--------------------------------------------------------------------------
-        | CaçaPay
-        |--------------------------------------------------------------------------
-        */
+        // CaçaPay
 
         $pagamento = Http::post(
             $config->url_cacapay . '/api/compras',
@@ -54,11 +50,7 @@ class CompraController extends Controller
             ]);
         }
 
-        /*
-        |--------------------------------------------------------------------------
-        | Pagamento aprovado
-        |--------------------------------------------------------------------------
-        */
+        
 
         DB::transaction(function () use ($venda) {
 
@@ -79,11 +71,7 @@ class CompraController extends Controller
             )->delete();
         });
 
-        /*
-        |--------------------------------------------------------------------------
-        | Monta lista de produtos para o CaçaLog
-        |--------------------------------------------------------------------------
-        */
+        // CaçaLog
 
         $conteudo = [];
 
@@ -95,11 +83,7 @@ class CompraController extends Controller
             ];
         }
 
-        /*
-        |--------------------------------------------------------------------------
-        | CaçaLog
-        |--------------------------------------------------------------------------
-        */
+        
         $entrega = Http::post(
             $config->url_cacalog . '/api/entregas',
             [
