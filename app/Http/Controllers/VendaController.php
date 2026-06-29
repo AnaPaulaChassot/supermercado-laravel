@@ -50,7 +50,6 @@ class VendaController extends Controller
 
     function salvar(Request $req)
     {
-        DB::beginTransaction();
 
         try {
 
@@ -78,15 +77,18 @@ class VendaController extends Controller
                     $item->produto->valor *
                     $item->quantidade;
             }
+            
 
-            // cria a venda
+
             $venda = Venda::create([
                 'cliente_id'  => $cliente->id,
                 'endereco_id' => $req->enderecos_id,
-                'valor_total' => $valorTotal
+                'valor_total' => $valorTotal,
+                'status_pagamento' => 'Pendente',
+                'status_entrega' => 'Aguardando'
             ]);
 
-            // salva os produtos da venda
+            // salva os itens da venda
             foreach ($itens as $item) {
 
                 $subtotal =
@@ -100,30 +102,25 @@ class VendaController extends Controller
                     'subtotal'   => $subtotal
                 ]);
 
-                // baixa estoque
-                $produto = Produto::findOrFail(
+                // baixa estoque agora é após pagamento
+                /*$produto = Produto::findOrFail(
                     $item->produto_id
                 );
 
                 $produto->quantidade_estoque -=
                     $item->quantidade;
 
-                $produto->save();
+                $produto->save();*/
             }
 
-            // limpa carrinho
-            Carrinho::where(
+            // limpar carrinho agora após pagamento autorizado
+            /*Carrinho::where(
                 'cliente_id',
                 $cliente->id
-            )->delete();
+            )->delete();*/
 
-            DB::commit();
 
-            return redirect('/mercado')
-                ->with(
-                    'mensagem',
-                    'Compra realizada com sucesso!'
-                );
+            return redirect('/compras/finalizar/'.$venda->id);
         } catch (\Exception $e) {
 
             DB::rollBack();

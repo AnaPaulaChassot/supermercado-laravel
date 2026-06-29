@@ -1,130 +1,165 @@
 <?php
 
-namespace App\Http\Controllers\Api;
+namespace App\Http\Controllers;
 
-use App\Http\Controllers\Controller;
-use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Http;
+use Illuminate\Support\Facades\DB;
 use App\Models\Configuracao;
 use App\Models\Venda;
-
-
+use App\Models\Carrinho;
 
 class CompraController extends Controller
 {
+    public function finalizar($id)
+    {
+        $venda = Venda::with([
+            'cliente',
+            'produtos',
+            'endereco'
+        ])->findOrFail($id);
+
+        $config = Configuracao::first();
+
+        if (!$config) {
+            return view('finalizar', [
+                'sucesso' => false,
+                'mensagem' => 'Configuração da integração não encontrada.'
+            ]);
+        }
+
+        /*
+        |--------------------------------------------------------------------------
+        | CaçaPay
+        |--------------------------------------------------------------------------
+        */
+
+        $pagamento = Http::post(
+            $config->url_cacapay . '/api/compras',
+            [
+                'cpf'   => $venda->cliente->cpf,
+                'token' => $config->token_cacapay,
+                'valor' => $venda->valor_total
+            ]
+        );
+
+        if (!$pagamento->successful()) {
+
+            $venda->status_pagamento = 'Negado';
+            $venda->save();
+
+            return view('finalizar', [
+                'sucesso' => false,
+                'mensagem' => $pagamento->json('message')
+                    ?? 'Pagamento recusado.'
+            ]);
+        }
+
+        /*
+        |--------------------------------------------------------------------------
+        | Pagamento aprovado
+        |--------------------------------------------------------------------------
+        */
+
+        DB::transaction(function () use ($venda) {
+
+            $venda->status_pagamento = 'Aprovado';
+            $venda->save();
+
+            foreach ($venda->produtos as $produto) {
+
+                $produto->quantidade_estoque -=
+                    $produto->pivot->quantidade;
+
+                $produto->save();
+            }
+
+            Carrinho::where(
+                'cliente_id',
+                $venda->cliente_id
+            )->delete();
+        });
+
+        /*
+        |--------------------------------------------------------------------------
+        | Monta lista de produtos para o CaçaLog
+        |--------------------------------------------------------------------------
+        */
+
+        $conteudo = [];
+
+        foreach ($venda->produtos as $produto) {
+
+            $conteudo[] = [
+                'nome' => $produto->nome,
+                'quantidade' => $produto->pivot->quantidade
+            ];
+        }
+
+        /*
+        |--------------------------------------------------------------------------
+        | CaçaLog
+        |--------------------------------------------------------------------------
+        */
+        $entrega = Http::post(
+            $config->url_cacalog . '/api/entregas',
+            [
+
+                'token' => $config->token_cacalog,
+
+                'codigo_pedido' => 'PED-' . $venda->id,
+
+                'cep' => $venda->endereco->cep,
+
+                'logradouro' => $venda->endereco->logradouro,
+
+                'numero' => $venda->endereco->numero,
+
+                'complemento' => null,
+
+                'bairro' => $venda->endereco->bairro,
+
+                'nome_destinatario' =>
+                $venda->cliente->nome,
 
 
-public function finalizar(Request $request)
-{
+                'conteudo' =>
+                $venda->produtos->map(function ($produto) {
 
-    $venda = Venda::find(
-        $request->venda_id
-    );
+                    return [
+                        'nome' => $produto->nome,
 
+                        'quantidade' =>
+                        $produto->pivot->quantidade
+                    ];
+                })->values()->toArray()
 
-    $config = Configuracao::first();
+            ]
+        );
 
-    // caçapay
+        dd(
+            $entrega->status(),
+            $entrega->json(),
+            $entrega->body()
+        );
 
-    $pagamento = Http::withToken(
+        if ($entrega->successful()) {
 
-        $config->token_cacapay
+            $venda->status_entrega = 'Pendente';
+        } else {
 
-    )->post(
-
-        $config->url_cacapay.'/api/compras',
-
-        [
-
-        'cpf'=>$venda->cliente->cpf,
-
-        'token'=>$config->token_cacapay,
-
-        'valor'=>$venda->valor
-
-        ]
-
-    );
-
-
-
-    if(!$pagamento->successful()){
-
-
-        $venda->status_pagamento =
-            'Negado';
-
+            $venda->status_entrega = 'Erro ao solicitar entrega';
+        }
 
         $venda->save();
 
+        return view('finalizar', [
 
-        return response()->json(
-            [
-            'erro'=>'Pagamento recusado'
-            ],
-            422
-        );
+            'sucesso' => true,
 
+            'mensagem' => 'Pagamento aprovado com sucesso!',
+
+            'entrega' => $entrega->json()
+
+        ]);
     }
-
-
-
-    $venda->status_pagamento =
-        'Aprovado';
-
-
-    $venda->save();
-
-
-    // CAÇALOG
- 
-    $entrega = Http::withToken(
-
-        $config->token_cacalog
-
-    )->post(
-
-        $config->url_cacalog.'/api/entregas',
-
-        [
-
-        'cliente'=>$venda->cliente->nome,
-
-
-        'endereco'=>$venda->cliente->endereco,
-
-
-        'callback'=>
-        route('entrega.status'),
-
-
-        'produtos'=>$venda->produtos
-
-        ]
-
-    );
-
-
-
-    $venda->status_entrega =
-        'Recebido';
-
-
-    $venda->save();
-
-
-
-    return response()->json([
-
-        'pagamento'=>$pagamento->json(),
-
-        'entrega'=>$entrega->json()
-
-    ]);
-
-
-}
-
-
-
 }

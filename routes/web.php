@@ -13,6 +13,7 @@ use App\Http\Controllers\LoginController;
 use App\Http\Controllers\CarrinhoController;
 use SebastianBergmann\CodeCoverage\Report\Html\Dashboard;
 use App\Http\Controllers\DashboardController;
+use App\Http\Controllers\CompraController;
 
 /*Route::get('/', function () {
     return view('cliente');
@@ -40,6 +41,7 @@ Route::middleware('login')->group(function () {
     Route::post('/carrinho/adicionar', [CarrinhoController::class, 'adicionar'])->name('carrinho.adicionar');
     Route::get('/carrinho', [CarrinhoController::class, 'listar'])->name('carrinho');
     Route::get('/carrinho/delete/{id}', [CarrinhoController::class, 'delete'])->name('carrinho.delete');
+    Route::get('/compras/finalizar/{id}', [CompraController::class, 'finalizar']);
 });
 
 
@@ -98,4 +100,3 @@ Route::middleware('login.admin')->group(function () {
 
     Route::get('/dashboard', [DashboardController::class, 'index'])->name('dashboard');
 });
-  

@@ -29,8 +29,8 @@ Route::post(
 
 Route::post(
 '/entrega/status',
-[EntregaController::class,'status']
-);
+[EntregaController::class,'atualizar']
+)->name('entrega.status');
 
 
 

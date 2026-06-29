@@ -8,24 +8,16 @@ use App\Models\Venda;
 
 class EntregaController extends Controller
 {
-    public function status(Request $request)
-{
+    public function atualizar(Request $request)
+    {
+        $venda = Venda::findOrFail($request->codigo_pedido);
 
-    $venda = Venda::find(
-        $request->pedido
-    );
+        $venda->status_entrega = $request->status;
 
+        $venda->save();
 
-    $venda->status_entrega =
-        $request->status;
-
-
-    $venda->save();
-
-
-    return response()->json([
-        'ok'=>true
-    ]);
-
-}
+        return response()->json([
+            'success' => true
+        ]);
+    }
 }

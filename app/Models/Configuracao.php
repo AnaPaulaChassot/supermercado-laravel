@@ -5,7 +5,7 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Model;
 
 
-    class Configuracao extends Model
+class Configuracao extends Model
 {
     protected $fillable = [
         'url_cacapay',
@@ -14,4 +14,3 @@ use Illuminate\Database\Eloquent\Model;
         'token_cacalog'
     ];
 }
-

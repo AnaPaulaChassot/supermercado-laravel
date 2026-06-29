@@ -53,6 +53,15 @@
                         required>
                 </div>
 
+                <div class="col-md-4 mb-3">
+                    <label class="form-label">CEP</label>
+                    <input type="text"
+                        name="cep"
+                        class="form-control"
+                        value="{{ old('cep', $endereco->cep ?? '') }}"
+                        required>
+                </div>
+
                 <div class="col-md-6 mb-3">
                     <label class="form-label">Logradouro</label>
                     <input type="text"

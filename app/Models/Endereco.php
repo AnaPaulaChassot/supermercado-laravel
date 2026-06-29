@@ -8,6 +8,7 @@ class Endereco extends Model
 {
     protected $fillable = [
         'descricao',
+        'cep',
         'logradouro',
         'numero',
         'bairro',

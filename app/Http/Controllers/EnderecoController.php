@@ -80,6 +80,7 @@ class EnderecoController extends Controller
         }
 
         $e->descricao = $req->descricao;
+        $e->cep = $req->cep;
         $e->logradouro = $req->logradouro;
         $e->numero = $req->numero;
         $e->bairro = $req->bairro;
