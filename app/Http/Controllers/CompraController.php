@@ -7,6 +7,7 @@ use Illuminate\Support\Facades\DB;
 use App\Models\Configuracao;
 use App\Models\Venda;
 use App\Models\Carrinho;
+use App\Models\Cliente;
 
 class CompraController extends Controller
 {
@@ -17,6 +18,12 @@ class CompraController extends Controller
             'produtos',
             'endereco'
         ])->findOrFail($id);
+
+        /*$cliente = Cliente::with([
+            'cliente',
+            'produtos',
+            'endereco'
+        ])->findOrFail($id);*/
 
         $config = Configuracao::first();
 
@@ -29,14 +36,20 @@ class CompraController extends Controller
 
         // CaçaPay
 
+        
+
         $pagamento = Http::post(
             $config->url_cacapay . '/api/compras',
             [
                 'cpf'   => $venda->cliente->cpf,
                 'token' => $config->token_cacapay,
-                'valor' => $venda->valor_total
+                'valor' => $venda->valor_total,
+                'nome'  => $venda->cliente->nome,
+                'email' => $venda->cliente->email,
             ]
         );
+
+
 
         if (!$pagamento->successful()) {
 
@@ -50,7 +63,7 @@ class CompraController extends Controller
             ]);
         }
 
-        
+
 
         DB::transaction(function () use ($venda) {
 
@@ -83,7 +96,7 @@ class CompraController extends Controller
             ];
         }
 
-        
+
         $entrega = Http::post(
             $config->url_cacalog . '/api/entregas',
             [
@@ -124,7 +137,7 @@ class CompraController extends Controller
             $entrega->status(),
             $entrega->json(),
             $entrega->body()
-        );
+        ); //descobrir status entrega
 
         if ($entrega->successful()) {
 

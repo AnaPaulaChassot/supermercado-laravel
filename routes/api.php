@@ -5,6 +5,7 @@ use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Api\PagamentoController;
 use App\Http\Controllers\Api\EntregaController;
 use App\Http\Controllers\Api\VendaController;
+//use App\Http\Controllers\CompraController;
 
 /*
 |--------------------------------------------------------------------------
