@@ -12,7 +12,12 @@ return new class extends Migration
     public function up(): void
     {
         Schema::table('vendas', function (Blueprint $table) {
-            //
+        
+        $table->string('status_pagamento')
+            ->default('Pendente');
+
+        $table->string('status_entrega')
+            ->nullable();
         });
     }
 

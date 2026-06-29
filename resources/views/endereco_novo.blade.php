@@ -1,7 +1,7 @@
 
     @extends('maincliente')
 
-    @section('titulo', 'Administrador')
+    @section('titulo', 'Endereço')
 
     @section('conteudo')
     

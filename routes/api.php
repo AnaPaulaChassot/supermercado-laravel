@@ -34,6 +34,5 @@ Route::post(
 
 
 
-
 Route::get('/vendas', [VendaController::class, 'index']);
 Route::get('/vendas/{id}', [VendaController::class, 'show']);

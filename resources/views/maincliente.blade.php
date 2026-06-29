@@ -45,7 +45,8 @@
 
         .produto-img {
             height: 220px;
-            object-fit: cover;
+            width: 100%;
+            object-fit: contain;
         }
     </style>
 

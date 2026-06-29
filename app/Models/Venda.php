@@ -13,7 +13,9 @@ class Venda extends Model
     protected $fillable = [
         'valor_total',
         'cliente_id',
-        'endereco_id'
+        'endereco_id',
+        'status_pagamento',
+        'status_entrega'
     ];
 
     public function cliente()
