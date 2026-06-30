@@ -133,11 +133,11 @@ class CompraController extends Controller
             ]
         );
 
-        dd(
+        /*dd(
             $entrega->status(),
             $entrega->json(),
             $entrega->body()
-        ); //descobrir status entrega
+        ); //descobrir status entrega */
 
         if ($entrega->successful()) {
 
